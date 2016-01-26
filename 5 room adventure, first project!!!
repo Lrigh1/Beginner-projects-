@@ -1,0 +1,181 @@
+                                        ###########################
+                                     ######5 room text adventure######
+                                        ###########################
+
+### keyholder variables
+height = 0
+strength = 0
+room1check = 0
+room2check = 0
+room3check = 0
+feather = 0
+mask = 0
+StrengthPotion = 0
+firstTimeGnome = 0
+
+######################
+## get name/sex/race##
+######################
+while True:
+    name = input("What is your name?: ")
+    if all(x.isalpha() or x.isspace() or "." in name for x in name):
+        break
+    else:
+        print("Only a real name please!\n")
+
+# stores name
+name = name.title()
+
+while True:
+    sex = input("Are you a boy or a girl? ").lower()
+    if any(s in sex for s in{'boy', "girl", "g", "b"}):
+        break
+    else:
+        print("try typing boy or girl\n")
+
+####################################
+##Takes their race, and creates a ##
+##variable = to their class choice##
+####################################
+while True:
+    race = input("Dwarf, elf, or human? ").lower()
+    if any(s in race for s in{"dwarf", "elf", "human"}):
+        break
+    else:
+        print ("Try typing dwarf, elf, or human\n")
+
+#####################
+##gives race traits##
+#####################
+if race == "dwarf":
+    height = 3 ; strength = 8
+elif race == "elf":
+    height = 9 ; strength = 3
+elif race == "human":
+    height = 6 ; strength = 5
+
+######################
+###Room you start in##
+######################
+def room1():
+    if room1check == 1 and room2check ==1 and room3check == 1:
+        room4()
+    choice1 = input("""
+#######################################################
+You are in a dull looking room, with a rock lined wall.
+There are three doors.\n
+Left, Right, or Straight? \n""").lower()
+    while True:
+        if any(s in choice1 for s in{'l', "left"}):
+            (room2_left()) ;break
+        elif any(s in choice1 for s in{"right"}):
+            (room3_right()) ;break
+        elif any(s in choice1 for s in{'s', "straight"}):
+            (room1_straight()) ;break
+        else:
+            print("You must choose left, right, or straight!") ; room1()
+
+##############################################################################
+##room2: rock room.  Test if they can break rock, strength must be 8 or over##
+##############################################################################
+def room2_left():
+    print("This is the rock room.  There is a door in the back, but it is blocked by a rock!\n")
+    global feather ; global height
+    if feather == 0:
+        print("Hmmm, there is a feather in the room.  I'll pick it up")
+        global height; height += 6
+        feather = 1
+    while True:
+        break_rock = input("do you want to break the rock? \n").lower()
+        if any(s in break_rock for s in{"yes", "y", "no", "yes"}):
+            if break_rock == "yes" or break_rock == "y":
+                if strength >= 8:
+                    print("You smash your fist down and the rock breaks!  Now back to the first room.\n")
+                    global room1check; room1check = 1
+                    room1() ; break
+                else:
+                    print("you are not strong enough to do this!  Back to the first room.\n")
+                    room1() ; break
+            else:
+                print("back to rooommmmm\n") ; room1() ; break
+        else:
+            print("try yes or no\n")
+
+###################################################################################################
+##room3 on the right, feather room.  Unless they are tall(9 or over), they need to get a feather!##
+##Mask pickup is in this room.                                                                   ##
+###################################################################################################
+def room3_right():
+    print("This is the feather room.  There is a door in the back, but it is up on a high perch!\n")
+    global mask
+    if mask == 0:
+        print("Hmmm, there is a mask in the room.  I'll pick it up")
+        mask = 1
+    while True:
+        perch = input("Get on the perch? \n").lower()
+        if any(s in perch for s in{"yes", "y", "no", "yes"}):
+            if perch == "yes" or perch == "y":
+                if height >= 9:
+                    print("You jump up, get on the perch, and leave the room!  Back to the first room.\n")
+                    global room3check; room3check = 1
+                    room1() ; break
+                else:
+                    print("you are not tall enough to do this!  Back to the first room.\n")
+                    room1() ; break
+            else:
+                print("back to rooommmmm\n") ; room1() ; break
+        else:
+            print("try yes or no\n")
+
+#########################################################################################
+##room2 straight ahead, racist gnome.  Unless you are a human, you have to find a mask!##
+#########################################################################################
+def room1_straight():
+    global firstTimeGnome ; global StrengthPotion ; global strength
+    print("There is a little gnome in the room in front of a door.  You walk closer to him\n")
+    if firstTimeGnome == 0:
+        print('He yells at you: "I AM THE RACIST GNOME!!!  You SHALL NOT PASS unless you are the human master race!!"')
+        print("...")
+        print('"Umm....but you are not human either", You say.')
+        print('He looks at you and says, "I AM THE RACIST GNOME, so my race matters not!\n')
+        firstTimeGnome = 1
+    while True:
+        racist_gnome = input("do you want to go past the racist gnome? \n").lower()
+        if any(s in racist_gnome for s in{"yes", "y", "no", "yes"}):
+            if racist_gnome == "yes" or racist_gnome == "y":
+                if mask == 1 or race == 'human':
+                    print("I AM THE RACIST GNOME!!!  You seem to be of the human master race. Fare thee well!\n")
+                    if race != "human":
+                        print("Hmmm...you smell funny....\n")
+                    if StrengthPotion == 0:
+                        print("Oh, I forgot.  Since you are the master race, here is a strength potion for you!\n")
+                        strength += 5 ; StrengthPotion = 1
+                    global room2check; room2check = 1
+                    room1() ; break
+                else:
+                    print("I AM THE RACIST GNOME")
+                    print("you are not a human!  Back to the first room.\n")
+                    room1() ; break
+            else:
+                print("back to rooommmmm\n") ; room1() ; break
+        else:
+            print("try yes or no\n")
+
+def room4():
+    print("""
+*********************************()*********************************()********************
+**************()******************|*********************************|*********************
+***************|**************************************************************************
+You have escaped by collecting everything and getting out of every room!  Congratulations!
+******************************************************************************************
+*****************()**********************************()***********************************
+*****************|************************************|***********************************""")
+    quit()
+
+                                             ####################
+                                            ###Start of game!!!###
+                                             ####################
+print("""\nWelcome {0}! You are about to enter a maze!  To finish and exit, you must complete
+all the obstacles.  Good luck!\n""".format(name))
+
+room1()
