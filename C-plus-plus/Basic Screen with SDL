@@ -1,5 +1,3 @@
-#include <SDL.h>
-#include <stdio.h>
 
 const int SCREEN_WIDTH = 720;
 const int SCREEN_HEIGHT = 480;
@@ -33,12 +31,16 @@ int main(int argc, char* args[])
 
 		SDL_FillRect(screen, NULL, bgColor);
 
+		// TODO: RENDERING
+
 		SDL_UpdateWindowSurface(window);
 	}
 
 	Close();
 	return 0;
 }
+
+
 bool Initialize()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -68,4 +70,3 @@ void Close()
 
 	SDL_Quit();
 }
-
